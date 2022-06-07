@@ -10,7 +10,7 @@ https://calm-travesseiro-a2b773.netlify.app
 
 ## Screenshots
 
-![App Screenshot](https://res.cloudinary.com/dwkzmlsra/image/upload/v1654568974/GameOfLife/game-of-life_nuzsch.png)
+![App Screenshot](https://res.cloudinary.com/dwkzmlsra/image/upload/v1654581067/GameOfLife/Screenshot_2022-06-07_154955_f1miw2.png)
 
 
 ## Run Locally
