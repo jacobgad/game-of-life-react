@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import './app.css';
+import { useCallback, useRef, useState } from 'react';
 
 const numCols = 40;
 const numRows = 20;
@@ -23,10 +22,10 @@ function generateGrid() {
 	return grid;
 }
 
-function generateRandomGrid() {
+function generateRandomGrid(randPopDenc: number) {
 	let grid: number[][] = [];
 	for (let i = 0; i < numRows; i++) {
-		grid.push(Array.from(Array(numCols), () => (Math.random() > 0.7 ? 1 : 0)));
+		grid.push(Array.from(Array(numCols), () => (Math.random() < randPopDenc / 100 ? 1 : 0)));
 	}
 	return grid;
 }
@@ -63,9 +62,14 @@ export default function App() {
 	const [grid, setGrid] = useState(generateGrid());
 	const [running, setRunning] = useState(false);
 	const [gen, setGen] = useState(0);
+	const [speed, setSpeed] = useState(50);
+	const [randPopDenc, setRandPopDenc] = useState(50);
 
 	const runningRef = useRef(running);
 	runningRef.current = running;
+
+	const speedRef = useRef(speed);
+	speedRef.current = speed;
 
 	function handleToggleTile(i: number, j: number) {
 		let newGrid = copyGrid(grid);
@@ -96,31 +100,77 @@ export default function App() {
 			return getNextGen(current);
 		});
 		setGen((gen) => gen + 1);
-		setTimeout(runSimulation, 200);
+		setTimeout(runSimulation, 1000 - speedRef.current * 10);
 	}, []);
 
 	return (
-		<div style={{ marginLeft: '2rem', marginRight: '2rem' }}>
+		<div style={{ display: 'grid', justifyContent: 'center', marginTop: '1rem' }}>
 			<h1 style={{ textAlign: 'center' }}>Game of Life</h1>
 			<div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-				<button style={{ width: '5rem' }} onClick={handleToggleRunning}>
+				<button style={{ width: '6rem' }} className='btn btn-success' onClick={handleToggleRunning}>
 					{running ? 'Stop' : 'Start'}
 				</button>
-				<button style={{ width: '5rem' }} onClick={handleClear} disabled={runningRef.current}>
+				<button
+					style={{ width: '6rem' }}
+					className='btn btn-danger'
+					onClick={handleClear}
+					disabled={runningRef.current}
+				>
 					Clear
 				</button>
 				<button
-					style={{ width: '5rem' }}
+					style={{ width: '6rem' }}
+					className='btn btn-primary'
 					onClick={() => {
 						handleClear();
-						setGrid(generateRandomGrid());
+						setGrid(generateRandomGrid(randPopDenc));
 					}}
 					disabled={runningRef.current}
 				>
 					Random
 				</button>
 			</div>
-			<h2 style={{ marginTop: 0 }}>Generation: {gen}</h2>
+			<div
+				style={{
+					display: 'flex',
+					gap: '4rem',
+					justifyContent: 'space-between',
+					alignItems: 'end',
+					marginTop: '1rem',
+					marginBottom: '1rem',
+				}}
+			>
+				<h3 style={{ width: `${100 / 3}%` }}>Generation: {gen}</h3>
+				<div style={{ width: `${100 / 3}%` }}>
+					<label htmlFor='speed' className='form-label'>
+						Speed: {speed}
+					</label>
+					<input
+						type='range'
+						className='form-range'
+						min='0'
+						max='100'
+						id='speed'
+						value={speed}
+						onChange={(e) => setSpeed(parseInt(e.target.value))}
+					/>
+				</div>
+				<div style={{ width: `${100 / 3}%` }}>
+					<label htmlFor='dencity' className='form-label'>
+						Population Dencity: {randPopDenc}
+					</label>
+					<input
+						type='range'
+						className='form-range'
+						min='0'
+						max='100'
+						id='dencity'
+						value={randPopDenc}
+						onChange={(e) => setRandPopDenc(parseInt(e.target.value))}
+						disabled={runningRef.current}
+					/>
+				</div>
+			</div>
 			<div
 				style={{
 					display: 'grid',
