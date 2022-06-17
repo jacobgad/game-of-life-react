@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const numCols = 40;
 const numRows = 20;
@@ -65,24 +65,10 @@ export default function App() {
 	const [speed, setSpeed] = useState(50);
 	const [randPopDenc, setRandPopDenc] = useState(50);
 
-	const runningRef = useRef(running);
-	runningRef.current = running;
-
-	const speedRef = useRef(speed);
-	speedRef.current = speed;
-
 	function handleToggleTile(i: number, j: number) {
 		let newGrid = copyGrid(grid);
 		newGrid[i][j] = newGrid[i][j] ? 0 : 1;
 		setGrid(newGrid);
-	}
-
-	function handleToggleRunning() {
-		setRunning(!running);
-		if (!running) {
-			runningRef.current = true;
-			runSimulation();
-		}
 	}
 
 	function handleClear() {
@@ -90,31 +76,38 @@ export default function App() {
 		setGen(0);
 	}
 
-	const runSimulation = useCallback(() => {
-		if (!runningRef.current) return;
-		setGrid((current) => {
-			const nextGen = getNextGen(current);
-			if (JSON.stringify(current) === JSON.stringify(nextGen)) {
-				setRunning(false);
-			}
-			return getNextGen(current);
-		});
-		setGen((gen) => gen + 1);
-		setTimeout(runSimulation, 1000 - speedRef.current * 10);
-	}, []);
+	useEffect(() => {
+		if (!running) return;
+		const timer = setInterval(() => {
+			setGrid((current) => {
+				const nextGen = getNextGen(current);
+				if (JSON.stringify(current) === JSON.stringify(nextGen)) {
+					setRunning(false);
+				}
+				return getNextGen(current);
+			});
+			setGen((gen) => gen + 1);
+		}, 1000 - speed * 10);
+
+		return () => clearInterval(timer);
+	}, [running, speed]);
 
 	return (
 		<div style={{ display: 'grid', justifyContent: 'center', marginTop: '1rem' }}>
 			<h1 style={{ textAlign: 'center' }}>Game of Life</h1>
 			<div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-				<button style={{ width: '6rem' }} className='btn btn-success' onClick={handleToggleRunning}>
+				<button
+					style={{ width: '6rem' }}
+					className='btn btn-success'
+					onClick={() => setRunning(!running)}
+				>
 					{running ? 'Stop' : 'Start'}
 				</button>
 				<button
 					style={{ width: '6rem' }}
 					className='btn btn-danger'
 					onClick={handleClear}
-					disabled={runningRef.current}
+					disabled={running}
 				>
 					Clear
 				</button>
@@ -125,7 +118,7 @@ export default function App() {
 						handleClear();
 						setGrid(generateRandomGrid(randPopDenc));
 					}}
-					disabled={runningRef.current}
+					disabled={running}
 				>
 					Random
 				</button>
@@ -167,7 +160,7 @@ export default function App() {
 						id='dencity'
 						value={randPopDenc}
 						onChange={(e) => setRandPopDenc(parseInt(e.target.value))}
-						disabled={runningRef.current}
+						disabled={running}
 					/>
 				</div>
 			</div>
