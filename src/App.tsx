@@ -168,7 +168,7 @@ export default function App() {
 				style={{
 					display: 'grid',
 					justifyContent: 'center',
-					gridTemplateColumns: `repeat(${numCols}, 2rem)`,
+					gridTemplateColumns: `repeat(${numCols}, calc(95vw / ${numCols}))`,
 				}}
 			>
 				{grid.map((row, i) =>
@@ -177,8 +177,8 @@ export default function App() {
 							key={`${i},${j}`}
 							onClick={() => handleToggleTile(i, j)}
 							style={{
-								width: '2rem',
-								height: '2rem',
+								width: `calc(95vw / ${numCols})`,
+								aspectRatio: '1',
 								borderTop: '2px solid black',
 								borderLeft: '2px solid black',
 								borderRight: j === numCols - 1 ? '2px solid black' : undefined,
