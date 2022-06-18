@@ -66,6 +66,7 @@ export default function App() {
 	const [gen, setGen] = useState(0);
 	const [speed, setSpeed] = useState(50);
 	const [randPopDenc, setRandPopDenc] = useState(50);
+	const [showGridLines, setShowGridLines] = useState(true);
 
 	function handleToggleTile(i: number, j: number) {
 		let newGrid = copyGrid(grid);
@@ -137,10 +138,23 @@ export default function App() {
 				}}
 			>
 				<div className='row'>
-					<div className='col-12 col-md-4 col-lg-2'>
+					<div className='col-12 col-md-6 col-lg-4 d-flex justify-content-between'>
 						<h4>Generation: {gen}</h4>
+						<div className='form-check form-switch'>
+							<input
+								checked={showGridLines}
+								onChange={(e) => setShowGridLines(e.target.checked)}
+								className='form-check-input'
+								type='checkbox'
+								role='switch'
+								id='gridLines'
+							/>
+							<label className='form-check-label' htmlFor='gridLines'>
+								Grid Lines
+							</label>
+						</div>
 					</div>
-					<div className='col-12 col-md-8 col-lg-4'>
+					<div className='col-12 col-md-6 col-lg-4'>
 						<div className='input-group'>
 							<span className='input-group-text'>Width</span>
 							<input
@@ -162,7 +176,7 @@ export default function App() {
 							/>
 						</div>
 					</div>
-					<div className='col-6 col-md-6 col-lg-3'>
+					<div className='col-6 col-md-6 col-lg-2'>
 						<label htmlFor='speed' className='form-label'>
 							Speed: {speed}
 						</label>
@@ -176,9 +190,9 @@ export default function App() {
 							onChange={(e) => setSpeed(parseInt(e.target.value))}
 						/>
 					</div>
-					<div className='col-6 col-md-6 col-lg-3'>
+					<div className='col-6 col-md-6 col-lg-2'>
 						<label htmlFor='dencity' className='form-label'>
-							Population Dencity: {randPopDenc}
+							Dencity: {randPopDenc}
 						</label>
 						<input
 							type='range'
@@ -198,6 +212,10 @@ export default function App() {
 					display: 'grid',
 					justifyContent: 'center',
 					gridTemplateColumns: `repeat(${gridSize.cols}, calc(95vw / ${gridSize.cols}))`,
+					borderTop: showGridLines ? 0 : '1px solid black',
+					borderLeft: showGridLines ? 0 : '1px solid black',
+					borderRight: '1px solid black',
+					borderBottom: '1px solid black',
 				}}
 			>
 				{grid.map((row, i) =>
@@ -208,11 +226,9 @@ export default function App() {
 							style={{
 								width: `calc(95vw / ${gridSize.cols})`,
 								aspectRatio: '1',
-								borderTop: '1px solid black',
-								borderLeft: '1px solid black',
-								borderRight: j === gridSize.cols - 1 ? '1px solid black' : undefined,
-								borderBottom: i === gridSize.rows - 1 ? '1px solid black' : undefined,
-								background: col ? 'lightblue' : undefined,
+								borderTop: showGridLines ? '1px solid black' : 0,
+								borderLeft: showGridLines ? '1px solid black' : 0,
+								background: col ? 'lightblue' : 0,
 							}}
 						/>
 					))
