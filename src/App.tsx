@@ -137,10 +137,10 @@ export default function App() {
 				}}
 			>
 				<div className='row'>
-					<div className='col-12 col-md-2'>
+					<div className='col-12 col-md-4 col-lg-2'>
 						<h4>Generation: {gen}</h4>
 					</div>
-					<div className='col-12 col-md-4'>
+					<div className='col-12 col-md-8 col-lg-4'>
 						<div className='input-group'>
 							<span className='input-group-text'>Width</span>
 							<input
@@ -162,7 +162,7 @@ export default function App() {
 							/>
 						</div>
 					</div>
-					<div className='col-6 col-md-3'>
+					<div className='col-6 col-md-6 col-lg-3'>
 						<label htmlFor='speed' className='form-label'>
 							Speed: {speed}
 						</label>
@@ -176,7 +176,7 @@ export default function App() {
 							onChange={(e) => setSpeed(parseInt(e.target.value))}
 						/>
 					</div>
-					<div className='col-6 col-md-3'>
+					<div className='col-6 col-md-6 col-lg-3'>
 						<label htmlFor='dencity' className='form-label'>
 							Population Dencity: {randPopDenc}
 						</label>
