@@ -5,7 +5,7 @@ A simple demo of Conway's Game of Life written in react and typescript.
 
 ## Demo
 
-https://jacobgad-game-of-life-react.netlify.app/
+https://https://game-of-life-react.jacobgad.com//
 
 
 ## Screenshots
